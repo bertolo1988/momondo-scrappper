@@ -1,0 +1,28 @@
+{
+  "name": "momondo-scrappper",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/momondo-scrappper.js",
+  "engines": {
+    "node": ">= 6.5.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bertolo1988/momondo-scrappper.git"
+  },
+  "keywords": [
+    "momondo"
+  ],
+  "author": "bertolo1988 <tiagobertolo@gmail.com> (https://github.com/bertolo1988)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bertolo1988/momondo-scrappper/issues"
+  },
+  "homepage": "https://github.com/bertolo1988/momondo-scrappper#readme",
+  "devDependencies": {
+    "typescript": "^2.0.6"
+  }
+}

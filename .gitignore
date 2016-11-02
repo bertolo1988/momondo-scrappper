@@ -1,0 +1,14 @@
+# compiled output
+/dist
+/doc
+
+# dependencies
+/node_modules
+
+# misc
+/typings
+
+# files
+*.pem
+*.log
+*.log.*
