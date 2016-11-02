@@ -11,6 +11,7 @@
     "postinstall": "typings install",
     "build": "tsc -p .",
     "watch": "tsc -w",
+    "prepublish": "npm run build",
     "verbose-start": "cross-env DEBUG=* node ./dist/momondo-scrappper.js",
     "start": "cross-env DEBUG=momondo-scrappper node ./dist/momondo-scrappper.js"
   },
