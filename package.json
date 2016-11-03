@@ -2,18 +2,19 @@
   "name": "momondo-scrappper",
   "version": "0.0.1",
   "description": "A tool to query data from momondo.com using phantomjs-node",
-  "main": "dist/momondo-scrappper.js",
+  "main": "dist/src/MomondoScrappper.js",
   "engines": {
     "node": ">= 6.5.0"
   },
   "scripts": {
-    "test": "mocha -r ts-node/register test/**.ts",
+    "test": "npm run build && mocha -r ts-node/register test/**.ts",
     "postinstall": "typings install",
     "build": "tsc -p .",
     "watch": "tsc -w",
     "prepublish": "npm run build",
-    "verbose-start": "cross-env DEBUG=* node ./dist/momondo-scrappper.js",
-    "start": "cross-env DEBUG=momondo-scrappper node ./dist/momondo-scrappper.js"
+    "verbose-start": "cross-env DEBUG=* npm run start-app",
+    "start": "cross-env DEBUG=MomondoScrappper npm run start-app",
+    "start-app": "npm run build && node demo.js"
   },
   "repository": {
     "type": "git",

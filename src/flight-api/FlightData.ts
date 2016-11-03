@@ -1,3 +1,5 @@
+import { FlightTime } from './FlightTime'
+
 export class FlightData {
     arrival: any;
     departure: any;

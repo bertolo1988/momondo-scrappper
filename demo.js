@@ -1,2 +1,2 @@
-let MomondoScrappper = require('./dist/MomondoScrappper');
+let MomondoScrappper = require('./dist/src/MomondoScrappper');
 MomondoScrappper.scrap();
