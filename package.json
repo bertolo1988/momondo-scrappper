@@ -7,7 +7,7 @@
     "node": ">= 6.5.0"
   },
   "scripts": {
-    "test": "mocha -r ts-node/register src/**/test.ts",
+    "test": "mocha -r ts-node/register test/**.ts",
     "postinstall": "typings install",
     "build": "tsc -p .",
     "watch": "tsc -w",

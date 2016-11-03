@@ -1,12 +1,14 @@
 # compiled output
 /dist
 /doc
+/ts-node
 
 # dependencies
 /node_modules
 
 # misc
 /typings
+/.vscode
 
 # files
 *.pem

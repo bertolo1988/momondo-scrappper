@@ -3,7 +3,10 @@
         "module": "commonjs",
         "target": "ES6",
         "outDir": "dist",
-        "rootDir": "src",
+        "rootDirs": [
+            "src",
+            "test"
+        ],
         "sourceMap": true
     },
     "exclude": [
