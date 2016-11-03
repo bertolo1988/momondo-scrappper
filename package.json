@@ -7,7 +7,7 @@
     "node": ">= 6.5.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha -r ts-node/register src/**/test.ts",
     "postinstall": "typings install",
     "build": "tsc -p .",
     "watch": "tsc -w",
@@ -29,6 +29,9 @@
   },
   "homepage": "https://github.com/bertolo1988/momondo-scrappper#readme",
   "devDependencies": {
+    "chai": "3.5.0",
+    "mocha": "3.1.2",
+    "ts-node": "1.6.1",
     "typescript": "2.0.6"
   },
   "dependencies": {
