@@ -7,7 +7,7 @@
     "node": ">= 6.5.0"
   },
   "scripts": {
-    "test": "npm run build && mocha -r ts-node/register test/**.ts",
+    "test": "npm run build && mocha dist/test --recursive",
     "postinstall": "typings install",
     "build": "tsc -p .",
     "watch": "tsc -w",
@@ -32,7 +32,6 @@
   "devDependencies": {
     "chai": "3.5.0",
     "mocha": "3.1.2",
-    "ts-node": "1.6.1",
     "typescript": "2.0.6"
   },
   "dependencies": {
