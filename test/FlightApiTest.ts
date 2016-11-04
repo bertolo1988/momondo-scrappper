@@ -1,81 +1,44 @@
 import { FlightTime } from '../src/flight-api/FlightTime';
-import { FlightPrice } from '../src/flight-api/FlightPrice';
-import { FlightBoarding } from '../src/flight-api/FlightBoarding';
-import { FlightData } from '../src/flight-api/FlightData';
-import { FlightSearch } from '../src/flight-api/FlightSearch';
 import { Flight } from '../src/flight-api/Flight';
-import { FlightClass } from '../src/flight-api/FlightClass';
 import { should } from 'chai';
-
 should();
 
 describe('Flight Api tests', () => {
 
+    function testFlightTime(time: FlightTime) {
+        time.minute.should.be.within(0, 60);
+        time.hour.should.be.within(0, 24);
+        time.day.should.be.within(1, 31);
+        time.month.should.be.within(1, 12);
+        time.year.should.be.above(2000);
+    }
+
     it('should create a FlightTime object', () => {
         let time = new FlightTime(16, 3, 10, 5, 2016);
-        time.minute.should.eql(16);
-        time.hour.should.eql(3);
-        time.day.should.eql(10);
-        time.month.should.eql(5);
-        time.year.should.eql(2016);
+        testFlightTime(time);
         time.toString().should.eql('{"minute":16,"hour":3,"day":10,"month":5,"year":2016}');
     });
 
-    it('should create a FlightPrice object', () => {
-        let price = new FlightPrice(3, 'EUR');
-        price.amount.should.eql(3);
-        price.currency.should.eql('EUR');
-        price.toString().should.eql('{"amount":3,"currency":"EUR"}');
-    });
-
-    it('should create a FlightBoarding object', () => {
-        let time = new FlightTime(15, 3, 10, 5, 2016);
-        let boarding = new FlightBoarding(time, 'LON');
-        boarding.should.have.property('time')
-        boarding.airport.should.eql('LON');
-        boarding.toString().should.eql('{"time":{"minute":15,"hour":3,"day":10,"month":5,"year":2016},"airport":"LON"}');
-    });
-
-    it('should create a FlightData object', () => {
-        let price = new FlightPrice(30, 'EUR');
-        let arrivalTime = new FlightTime(25, 14, 3, 11, 2016);
-        let arrival = new FlightBoarding(arrivalTime, 'MAD');
-        let departureTime = new FlightTime(50, 18, 3, 11, 2016);
-        let departure = new FlightBoarding(arrivalTime, 'LHR');
-        let data = new FlightData(325, 1, FlightClass.ECONOMY, ['Ryanair'], price, arrival, departure);
-        data.duration.should.eql(325);
-        data.stops.should.eql(1);
-        data.flightClass.should.eql(0);
-        data.airline.should.eql(['Ryanair']);
-        data.price.should.eql(price);
-        data.arrival.should.eql(arrival);
-        data.departure.should.eql(departure);
-        data.toString().should.eql('{"duration":325,"stops":1,"flightClass":0,"airline":["Ryanair"],"price":{"amount":30,"currency":"EUR"},"arrival":{"time":{"minute":25,"hour":14,"day":3,"month":11,"year":2016},"airport":"MAD"},"departure":{"time":{"minute":25,"hour":14,"day":3,"month":11,"year":2016},"airport":"LHR"}}');
-    });
-
-    it('should create a FlightSearch object', () => {
-        let today = new Date();
-        let search = new FlightSearch('LON', 'LIS', 'momondo', today);
-        search.from.should.eql('LON');
-        search.to.should.eql('LIS');
-        search.source.should.eql('momondo');
-        search.queried.should.eql(today);
-        search.toString().should.eql('{"from":"LON","to":"LIS","source":"momondo","queried":' + JSON.stringify(today) + '}');
-    });
-
     it('should create a Flight object', () => {
+        let arrivalTime = new FlightTime(25, 19, 3, 11, 2016);
+        let departureTime = new FlightTime(50, 17, 3, 11, 2016);
         let today = new Date();
-        let search = new FlightSearch('LON', 'LIS', 'momondo', today);
-        let price = new FlightPrice(30, 'EUR');
-        let arrivalTime = new FlightTime(25, 14, 3, 11, 2016);
-        let arrival = new FlightBoarding(arrivalTime, 'MAD');
-        let departureTime = new FlightTime(50, 18, 3, 11, 2016);
-        let departure = new FlightBoarding(arrivalTime, 'LHR');
-        let data = new FlightData(325, 1, FlightClass.ECONOMY, ['Ryanair'], price, arrival, departure);
-        let flight = new Flight(search, data);
-        flight.should.have.property('search');
-        flight.should.have.property('data');
-        flight.toString().should.eql('{"search":{"from":"LON","to":"LIS","source":"momondo","queried":' + JSON.stringify(today) + '},"data":{"duration":325,"stops":1,"flightClass":0,"airline":["Ryanair"],"price":{"amount":30,"currency":"EUR"},"arrival":{"time":{"minute":25,"hour":14,"day":3,"month":11,"year":2016},"airport":"MAD"},"departure":{"time":{"minute":25,"hour":14,"day":3,"month":11,"year":2016},"airport":"LHR"}}}');
+        let flight = new Flight('MAD', 'LON', today, 155, 0, 0, ['Ryanair'], 91, 'EUR', departureTime, arrivalTime, 'MAD', 'STN');
+        flight.search.from.should.be.a('String').and.have.length.of(3);
+        flight.search.to.should.be.a('String').and.have.length.of(3);
+        flight.search.source.should.eql('momondo').and.be.a('String');
+        flight.search.queried.should.be.a('Date');
+        flight.data.duration.should.be.a('Number').and.be.above(0);
+        flight.data.stops.should.be.a('Number').and.be.at.least(0);
+        flight.data.flightClass.should.be.a('Number').and.be.within(0, 3);
+        flight.data.airline.should.have.length.of.at.least(1);
+        flight.data.price.amount.should.be.a('Number').and.be.above(0);
+        flight.data.price.currency.should.be.a('String').and.have.length.of(3);
+        testFlightTime(flight.data.departure.time);
+        flight.data.departure.airport.should.be.a('String').and.have.length.of(3);
+        testFlightTime(flight.data.arrival.time);
+        flight.data.arrival.airport.should.be.a('String').and.have.length.of(3);
+        flight.toString().should.eql('{"search":{"from":"MAD","to":"LON","source":"momondo","queried":' + JSON.stringify(today) + '},"data":{"duration":155,"stops":0,"flightClass":0,"airline":["Ryanair"],"price":{"amount":91,"currency":"EUR"},"departure":{"time":{"minute":50,"hour":17,"day":3,"month":11,"year":2016},"airport":"MAD"},"arrival":{"time":{"minute":25,"hour":19,"day":3,"month":11,"year":2016},"airport":"STN"}}}');
     });
 
 });
