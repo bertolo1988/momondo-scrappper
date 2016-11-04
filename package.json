@@ -4,7 +4,7 @@
   "description": "A tool to query data from momondo.com using phantomjs-node",
   "main": "dist/src/MomondoScrappper.js",
   "engines": {
-    "node": ">= 6.5.0"
+    "node": ">= 6.0.0"
   },
   "scripts": {
     "test": "npm run build && mocha dist/test --recursive",
