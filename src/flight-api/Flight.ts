@@ -9,7 +9,7 @@ export class Flight {
         this.search = {};
         this.search.from = from;
         this.search.to = to;
-        this.search.source = "momondo";
+        this.search.source = 'momondo';
         this.search.queried = queried;
         this.data = {};
         this.data.duration = duration;
