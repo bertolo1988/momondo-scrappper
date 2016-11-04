@@ -1,4 +1,6 @@
-export class FlightTime {
+import { Printable } from './Printable'
+
+export class FlightTime extends Printable {
 
     private _minute: number;
     private _hour: number;
@@ -7,6 +9,7 @@ export class FlightTime {
     private _year: number;
 
     constructor(minute: number, hour: number, day: number, month: number, year: number) {
+        super();
         this._minute = minute;
         this._hour = hour;
         this._day = day;
@@ -53,4 +56,5 @@ export class FlightTime {
     public set minute(value: number) {
         this._minute = value;
     }
+
 }
