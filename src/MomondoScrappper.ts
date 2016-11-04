@@ -10,24 +10,31 @@ class MomondoScrappper {
 
     static scrap = function (route: String, date: any, dateFormat: String, currency: String, directFlight: Boolean, timeout: Number, retries: Number) {
 
-        function waitFor($config) {
-            $config._start = $config._start || new Date();
-
-            if ($config.timeout && (new Date()).getTime() - $config._start > $config.timeout) {
-                if ($config.error) $config.error();
-                if ($config.debug) console.log('timedout ' + ((new Date()).getTime() - $config._start) + 'ms');
-                return;
-            }
-
-            if ($config.check()) {
-                if ($config.debug) console.log('success ' + ((new Date()).getTime() - $config._start) + 'ms');
-                return $config.success();
-            }
-
-            setTimeout(waitFor, $config.interval || 0, $config);
-        }
+        function waitFor(testFx, onReady, timeOutMillis) {
+            var maxtimeOutMillis = timeOutMillis ? timeOutMillis : 3000, //< Default Max Timout is 3s
+                start = new Date().getTime(),
+                condition = false,
+                interval = setInterval(function () {
+                    if ((new Date().getTime() - start < maxtimeOutMillis) && !condition) {
+                        // If not time-out yet and condition not yet fulfilled
+                        condition = (typeof (testFx) === "string" ? eval(testFx) : testFx()); //< defensive code
+                    } else {
+                        if (!condition) {
+                            // If condition still not fulfilled (timeout but condition is 'false')
+                            console.log("'waitFor()' timeout");
+                            phantom.exit(1);
+                        } else {
+                            // Condition fulfilled (timeout and/or condition is 'true')
+                            console.log("'waitFor()' finished in " + (new Date().getTime() - start) + "ms.");
+                            typeof (onReady) === "string" ? eval(onReady) : onReady(); //< Do what it's supposed to do once the condition is fulfilled
+                            clearInterval(interval); //< Stop this interval
+                        }
+                    }
+                }, 250); //< repeat check every 250ms
+        };
 
         let url = 'http://www.momondo.pt/flightsearch/?Search=true&TripType=1&SegNo=1&SO0=LIS&SD0=NYC&SDP0=11-11-2016&AD=1&TK=ECO&DO=false&NA=false';
+
         let sitepage;
         let phInstance;
         phantom.create()
@@ -41,27 +48,17 @@ class MomondoScrappper {
             })
             .then(status => {
                 console.log(status);
-                return sitepage.property('content');
+                return waitFor(function () {
+                    return sitepage.evaluate(function () {
+                        return document.getElementById("searchProgressText").offsetLeft > 0;
+                    });
+                }, function () {
+                    console.log("The sign-in dialog should be visible now.");
+                    console.log('end');
+                }, 5000);
             })
             .then(content => {
-                // console.log(content);
-                let $ = cheerio.load('<h2 class="title">Hello world</h2>');
-                waitFor({
-                    debug: true,  // optional
-                    interval: 0,  // optional
-                    timeout: 60000,  // optional
-                    check: function () {
-                        return sitepage.evaluate(function () {
-                            return $("#searchProgressText:contains('Search complete')").is(':visible');
-                        });
-                    },
-                    success: function () {
-                        console.log('worked');
-                    },
-                    error: function () {
-                        console.log('did not work');
-                    }
-                });
+                console.log(content);
                 sitepage.close();
                 phInstance.exit();
             })
